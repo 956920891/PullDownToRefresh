@@ -1,0 +1,7 @@
+1.在android平台上实现的类似iPhone上那种下拉刷新列表
+2.主要有2个自定义View来实现这一功能
+PullToRefreshView.java：继承自LinearLayout，包含2个子View，第1个为header,
+  显示下拉箭头、刷新时间等信息，第2个为ListView或ScrollView或其他类型的View
+  都可以，本项目主要是为了实现ListView的下拉刷新，其他情况下未作测试。
+PullDownListView.java：继承自ListView，增加了一些额外的功能，主要是在touch
+  事件的判断上，区分是否需要进行下拉刷新，还是ListView本身的滑动操作。
