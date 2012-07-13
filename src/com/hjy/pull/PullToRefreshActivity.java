@@ -29,7 +29,7 @@ public class PullToRefreshActivity extends Activity {
         mPullView = (PullToRefreshView) findViewById(R.id.PullView);
         
         mListView = ((ListView)findViewById(R.id.ListView));
-        String[] strArr = new String[20];
+        String[] strArr = new String[30];
         for(int i=0; i<strArr.length; i++) {
         	strArr[i] = i + "" + i +i + i +i;
         }

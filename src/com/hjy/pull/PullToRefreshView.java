@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -37,10 +38,10 @@ public class PullToRefreshView extends LinearLayout {
 	
 	private static final int SCROLL_DURATION = 300;
 	
-	private static final int STATE_INVALID = -1;
-	private static final int STATE_LOADING = 0; // 加载中
-	private static final int STATE_PULLDOWN_TO_REFRESH = 1; // 下拉可以刷新
-	private static final int STATE_RELEASE_TO_REFRESH = 2; // 松开可以刷新
+	public static final int STATE_INVALID = -1;
+	public static final int STATE_LOADING = 0; // 加载中
+	public static final int STATE_PULLDOWN_TO_REFRESH = 1; // 下拉可以刷新
+	public static final int STATE_RELEASE_TO_REFRESH = 2; // 松开可以刷新
 	// 记录状态
 	private int mState = STATE_INVALID;
 
@@ -193,7 +194,8 @@ public class PullToRefreshView extends LinearLayout {
 			Log.d(TAG, "onInterceptTouchEvent move");
 			float yOffset = y - mLastMotionY;
 			mLastMotionY = y;
-			if (yOffset > 6 && canScroll())
+			Log.e(TAG, "scaled touch " + ViewConfiguration.getTouchSlop());
+			if (mState != STATE_LOADING && yOffset > ViewConfiguration.getTouchSlop() && canScroll())
 				return true;
 			break;
 		case MotionEvent.ACTION_CANCEL:
@@ -217,7 +219,8 @@ public class PullToRefreshView extends LinearLayout {
 			break;
 		case MotionEvent.ACTION_MOVE:
 			Log.d(TAG, "onTouchEvent move");
-			doScrollView(y);
+			if(mState != STATE_LOADING)
+				doScrollView(y);
 			mLastMotionY = y;
 			break;
 		case MotionEvent.ACTION_UP:
@@ -343,6 +346,10 @@ public class PullToRefreshView extends LinearLayout {
 		}
 		}
 		mState = state;
+	}
+	
+	public int getState() {
+		return mState;
 	}
 	
 	public void setOnRefreshListener(OnRefreshListener onRefreshListener) {

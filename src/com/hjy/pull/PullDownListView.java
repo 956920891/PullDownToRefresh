@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ListView;
 /**
@@ -58,8 +59,10 @@ public class PullDownListView extends ListView {
 				 * 2.如果本来处于下拉刷新的操作，仍旧响应下拉刷新的操作
 				 * 3.这2种情况下，都不触发ListView本身的滑动操作
 				 */
-				if((firstPos == 0 && Math.abs(firstView.getTop() - getListPaddingTop()) < 3 && y > mLastRawMotionY)
-						|| ((ViewGroup)getParent()).getScrollY() < 0) {
+				if(((PullToRefreshView)getParent()).getState() != PullToRefreshView.STATE_LOADING 
+						&&
+					((firstPos == 0 && Math.abs(firstView.getTop() - getListPaddingTop()) < 3 && (y - mLastRawMotionY) > ViewConfiguration.getTouchSlop())
+						|| ((PullToRefreshView)getParent()).getScrollY() < 0)) {
 					if(mOnPullDownScrollListener != null) {
 						Log.e("TAG", "scroll......");
 						mOnPullDownScrollListener.onListViewScroll(y - mLastRawMotionY);
